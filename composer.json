@@ -1,0 +1,7 @@
+{
+	"name": "rotmistrz/wolvish-comments",
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+    "version": "1.0.0"
+}
