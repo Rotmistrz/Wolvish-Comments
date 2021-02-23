@@ -1,8 +1,8 @@
 <?php
 
-namespace WolvishComments/Comments;
+namespace WolvishComments\Comments;
 
-use WolvishComments/Users/User;
+use WolvishComments\Users\User;
 use DateTime;
 
 class Comment {
@@ -21,6 +21,12 @@ class Comment {
 
 		$this->date = new DateTime();
 		$this->website = "";
+	}
+
+	public function setID(int $id) : Comment {
+		$this->id = $id;
+
+		return $this;
 	}
 
 	public function getID() : int {

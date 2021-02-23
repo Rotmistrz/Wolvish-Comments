@@ -1,6 +1,6 @@
 <?php
 
-namespace WolvishComments/Users;
+namespace WolvishComments\Users;
 
 class User {
 	private $email;

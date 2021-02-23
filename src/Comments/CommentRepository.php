@@ -1,20 +1,44 @@
 <?php
 
-namespace WolvishComments/Comments;
+namespace WolvishComments\Comments;
 
-use WolvishComments/Users/User;
+require 'Enums/CommentResponse.php';
+
+use WolvishComments\Users\User;
 use DateTime;
 use PDO;
+use WolvishComments\Users\UserRepository;
+use WolvishComments\Comments\Enums\CommentResponse;
 
 class CommentRepository {
 	private $pdo;
+	private $userRepository;
 
-	public function __construct(PDO $pdo) {
+	public function __construct(PDO $pdo, UserRepository $userRepository) {
 		$this->pdo = $pdo;
+		$this->userRepository = $userRepository;
 	}
 
-	public function insert(Comment $comment) : int {
+	public function insert(Comment $comment) : ?Comment {
+		$query = "INSERT INTO " . WOLVISH_TABLE_COMMENTS . " (commentID, date, articleID, userID, content, website)";
+		$query .= " VALUES (NULL, :date, :articleID, :userID, :content, :website)";
 
+		$user = $comment->getUser();
+
+		$inserting = $this->pdo->prepare($query);
+		$inserting->bindValue(':date', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+		$inserting->bindValue(':articleID', $comment->getArticleID(), PDO::PARAM_INT);
+		$inserting->bindValue(':userID', $user->getID(), PDO::PARAM_INT);
+		$inserting->bindValue(':content', $comment->getContent(), PDO::PARAM_STR);
+		$inserting->bindValue(':website', $comment->getWebsite(), PDO::PARAM_STR);
+
+		if ($inserting->execute()) {
+			$comment->setID($this->pdo->lastInsertId());
+
+			return $comment;
+		} else {
+			return null;
+		}
 	}
 
 	public function checkComment(Comment $comment) : int {
@@ -26,34 +50,16 @@ class CommentRepository {
 			return CommentResponse::INCORRECT_VALUE;
 		}
 
-		$user = $this->getUser($commentUser->getEmail());
+		$user = $this->userRepository->findByEmail($commentUser->getEmail());
 
-		if ($user->isAdmin()) {
+		if (is_null($user)) {
+			return CommentResponse::NO_USER;
+		} else if ($user->isAdmin()) {
 			return CommentResponse::ADMIN;
 		} else if ($user->getNick() != $commentUser->getNick()) {
 			return CommentResponse::INCONSISTENT_NICK;
 		} else {
 			return CommentResponse::OK;
-		}
-	}
-
-	private function getUser(string $email) : ?User {
-		$query = "SELECT u.*, a.userID AS adminID FROM " . WOLVISH_TABLE_USERS . " AS u";
-		$query .= " LEFT JOIN " . WOLVISH_TABLE_ADMINS . " AS a ON a.userID = u.userID";
-		$query .= " WHERE email = :email";
-
-		$loading = $this->pdo->prepare($query);
-		$loading->bindValue(':email', $email, PDO::PARAM_STR);
-		$loading->execute();
-
-		if ($result = $loading->fetch()) {
-			if (!is_null($result['adminID'])) {
-				return new Admin($result['email'], $result['nick']);
-			} else {
-				return new User($result['email'], $result['nick']);
-			}
-		} else {
-			return null;
 		}
 	}
 }
