@@ -27,9 +27,9 @@ class UserRepository {
 
 		if ($result = $loading->fetch()) {
 			if (!is_null($result['adminID'])) {
-				return new Admin($result['email'], $result['nick']);
+				return new Admin(intval($result['adminID']), $result['email'], $result['nick']);
 			} else {
-				return new User($result['email'], $result['nick']);
+				return new User(intval($result['userID']), $result['email'], $result['nick']);
 			}
 		} else {
 			return null;

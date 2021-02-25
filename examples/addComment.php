@@ -18,9 +18,10 @@
 	use WolvishComments\Comments\CommentRepository;
 	use WolvishComments\Comments\Enums\CommentResponse;
 
-	$user = new User("rotmistrz129@gmail.com", "Rotmistrz2");
+	$user = new User(1, "rotmistrz19@gmail.com", "Rotmistrz");
 
-	$comment = new Comment(0, $user, 1, "Pięknie napisane!");
+	$comment = new Comment(0, $user, 2, "Pięknie napisane!");
+	$comment->setWebsite("http://rotmistrz.pl");
 
 	$db = new DatabaseConnection('localhost', 'wolvish_comments', 'root', '');
 	$db->connect();
@@ -30,5 +31,13 @@
 	$userRepository = new UserRepository($pdo);
 	$commentRepository = new CommentRepository($pdo, $userRepository);
 
-	echo $commentRepository->checkComment($comment);
+	$checkingComment = $commentRepository->checkComment($comment);
+
+	if ($checkingComment == CommentResponse::OK) {
+		$resultComment = $commentRepository->insert($comment);
+
+		echo intval(is_null($resultComment));
+	} else {
+		echo "Rezultat: " . $checkingComment;
+	}
 ?>

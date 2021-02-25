@@ -18,9 +18,39 @@
 		<h1>Komentarze</h1>
 
 		<?php
+            require '../config/wolvish-config.php';
 
-			
+            require 'external/DatabaseConnection.php';
 
+            require '../src/Comments/Comment.php';
+            require '../src/Comments/CommentRepository.php';
+            //require '../src/Comments/Enums/CommentResponse.php';
+            require '../src/Users/User.php';
+            require '../src/Users/Admin.php';
+            require '../src/Users/UserRepository.php';
+
+            use WolvishComments\Users\User;
+            use WolvishComments\Users\Admin;
+            use WolvishComments\Users\UserRepository;
+            use WolvishComments\Comments\Comment;
+            use WolvishComments\Comments\CommentRepository;
+            use WolvishComments\Comments\Enums\CommentResponse;
+
+            $db = new DatabaseConnection('localhost', 'wolvish_comments', 'root', '');
+            $db->connect();
+
+            $pdo = $db->getConnection();
+
+            $userRepository = new UserRepository($pdo);
+            $commentRepository = new CommentRepository($pdo, $userRepository);
+
+            $comments = $commentRepository->findByArticle(2);
+
+            foreach ($comments as $comment) {
+                var_dump($comment);
+
+                echo "<br /><br />";
+            }
 		?>
 
 	</body>

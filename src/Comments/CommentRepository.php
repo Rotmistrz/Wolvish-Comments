@@ -41,6 +41,33 @@ class CommentRepository {
 		}
 	}
 
+	public function findByArticle(int $articleID) : array {
+		$query = "SELECT c.*, u.email, u.nick, a.userID AS adminID FROM " . WOLVISH_TABLE_COMMENTS . " AS c";
+		$query .= " LEFT JOIN " . WOLVISH_TABLE_USERS . " AS u ON u.userID = c.userID";
+		$query .= " LEFT JOIN " . WOLVISH_TABLE_ADMINS . " AS a ON a.userID = u.userID";
+		$query .= " WHERE articleID = :articleID";
+
+		$loading = $this->pdo->prepare($query);
+		$loading->bindValue(':articleID', $articleID, PDO::PARAM_INT);
+		$loading->execute();
+
+		$result = [];
+
+		$rawComments = $loading->fetchAll();
+
+		foreach ($rawComments as $commentData) {
+			$user = User::createFromRow($commentData);
+
+			if (!is_null($user)) {
+				$comment = new Comment(intval($commentData['commentID']), $user, $commentData['articleID'], $commentData['content']);
+
+				$result[] = $comment;
+			}
+		}
+
+		return $result;
+	}
+
 	public function checkComment(Comment $comment) : int {
 		$commentUser = $comment->getUser();
 
