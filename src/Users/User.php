@@ -13,6 +13,12 @@ class User {
 		$this->nick = $nick;
 	}
 
+	public function setID(int $id) : User {
+	    $this->id = $id;
+
+	    return $this;
+    }
+
 	public function getID() : int {
 		return $this->id;
 	}
@@ -40,4 +46,13 @@ class User {
 			return null;
 		}
 	}
+
+	public function asArray() : array {
+	    return [
+	        'id' => $this->getID(),
+            'nick' => $this->getNick(),
+            'email' => $this->getEmail(),
+            'isAdmin' => $this->isAdmin()
+        ];
+    }
 }

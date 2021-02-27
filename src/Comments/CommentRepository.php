@@ -2,8 +2,6 @@
 
 namespace WolvishComments\Comments;
 
-require 'Enums/CommentResponse.php';
-
 use WolvishComments\Users\User;
 use DateTime;
 use PDO;
@@ -60,6 +58,7 @@ class CommentRepository {
 
 			if (!is_null($user)) {
 				$comment = new Comment(intval($commentData['commentID']), $user, $commentData['articleID'], $commentData['content']);
+				$comment->setDate(DateTime::createFromFormat('Y-m-d H:i:s', $commentData['date']));
 
 				$result[] = $comment;
 			}

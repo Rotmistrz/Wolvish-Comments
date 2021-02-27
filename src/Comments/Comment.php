@@ -64,4 +64,15 @@ class Comment {
 
 		return $this;
 	}
+
+	public function asArray() : array {
+	    return [
+	        'id' => $this->getID(),
+            'user' => $this->user->asArray(),
+            'articleID' => $this->getArticleID(),
+            'date' => $this->date->format('Y-m-d, H:i'),
+            'website' => $this->getWebsite(),
+            'content' => $this->getContent()
+        ];
+    }
 }
