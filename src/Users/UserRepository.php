@@ -1,6 +1,6 @@
 <?php
 
-namespace WolvishComments\Users;
+namespace Rotmistrz\WolvishComments\Users;
 
 use DateTime;
 use PDO;

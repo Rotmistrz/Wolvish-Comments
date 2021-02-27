@@ -1,8 +1,8 @@
 <?php
 
-namespace WolvishComments\Comments;
+namespace Rotmistrz\WolvishComments\Comments;
 
-use WolvishComments\Users\User;
+use Rotmistrz\WolvishComments\Users\User;
 use DateTime;
 
 class Comment {

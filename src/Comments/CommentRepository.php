@@ -1,12 +1,12 @@
 <?php
 
-namespace WolvishComments\Comments;
+namespace Rotmistrz\WolvishComments\Comments;
 
-use WolvishComments\Users\User;
+use Rotmistrz\WolvishComments\Users\User;
 use DateTime;
 use PDO;
-use WolvishComments\Users\UserRepository;
-use WolvishComments\Comments\Enums\CommentResponse;
+use Rotmistrz\WolvishComments\Users\UserRepository;
+use Rotmistrz\WolvishComments\Comments\Enums\CommentResponse;
 
 class CommentRepository {
 	private $pdo;

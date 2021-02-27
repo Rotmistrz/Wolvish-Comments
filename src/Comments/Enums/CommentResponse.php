@@ -1,6 +1,6 @@
 <?php
 
-namespace WolvishComments\Comments\Enums;
+namespace Rotmistrz\WolvishComments\Comments\Enums;
 
 
 class CommentResponse {
